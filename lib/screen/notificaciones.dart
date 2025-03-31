@@ -1,24 +1,36 @@
 import 'package:flutter/material.dart';
 
-class notificaciones extends StatelessWidget {
-  const notificaciones({super.key});
+class Notificaciones extends StatelessWidget {
+  const Notificaciones({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(233, 43, 247, 230),
-        title: const Text("Notificaciones UNICAH 2025"),
-      ),
+      appBar: AppBar(title: const Text("Notificaciones")),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(13),
         child: ListView.builder(
-          itemCount: 10, // Número de notificaciones
+          itemCount: notifications.length,
           itemBuilder: (context, index) {
-            return NotificationCard(
-              title: 'Notificacion ${index + 1}',
-              message:
-                  'Este es el mensaje de la notificación número ${index + 1}',
+            return Card(
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              elevation: 2,
+              child: ListTile(
+                title: Text(
+                  notifications[index].title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(notifications[index].message),
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Notificación: ${notifications[index].title}',
+                      ),
+                    ),
+                  );
+                },
+              ),
             );
           },
         ),
@@ -27,29 +39,34 @@ class notificaciones extends StatelessWidget {
   }
 }
 
-class NotificationCard extends StatelessWidget {
+// Modelo de datos simplificado
+class Notification {
   final String title;
   final String message;
 
-  const NotificationCard({required this.title, required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      elevation: 4,
-      child: ListTile(
-        leading: Icon(Icons.notifications, color: Colors.teal),
-        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(message),
-        trailing: Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {
-          // Aquí puedes definir lo que ocurre al hacer tap en la notificación
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Notificacion tocada: $title')),
-          );
-        },
-      ),
-    );
-  }
+  Notification({required this.title, required this.message});
 }
+
+List<Notification> notifications = [
+  Notification(
+    title: 'Bienvenido a UNICAH',
+    message: '¡Gracias por unirte a nuestra comunidad!',
+  ),
+  Notification(
+    title: 'Error al cargar datos',
+    message:
+        'Hubo un problema al intentar obtener los datos, por favor intente más tarde.',
+  ),
+  Notification(
+    title: 'Nuevo mensaje de tu profesor',
+    message: 'Tienes un nuevo mensaje en tu cuenta de la UNICAH.',
+  ),
+  Notification(
+    title: 'Aviso importante',
+    message: 'El servidor estará en mantenimiento de 10:00 PM a 12:00 AM.',
+  ),
+  Notification(
+    title: 'Reintentar operación',
+    message: 'Por favor, vuelve a intentar la acción más tarde.',
+  ),
+];
