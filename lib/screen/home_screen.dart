@@ -6,6 +6,7 @@ class home_screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final searchController = SearchController();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(233, 241, 139, 30),
@@ -16,7 +17,7 @@ class home_screen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => notificaciones()),
+                MaterialPageRoute(builder: (context) => Notificaciones()),
               );
             },
           ),
@@ -27,25 +28,30 @@ class home_screen extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 25),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(233, 241, 139, 30),
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                padding: EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.search,
-                      color: const Color.fromARGB(255, 249, 249, 249),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: SearchBar(
+                  controller: searchController,
+                  padding: const WidgetStatePropertyAll<EdgeInsets>(
+                    EdgeInsets.symmetric(horizontal: 16.0),
+                  ),
+                  leading: const Icon(Icons.search),
+                  hintText: 'Buscar...',
+                  hintStyle: WidgetStateProperty.all(
+                    const TextStyle(color: Colors.white70),
+                  ),
+                  backgroundColor: WidgetStateProperty.all(
+                    const Color.fromARGB(233, 241, 139, 30),
+                  ),
+                  textStyle: WidgetStateProperty.all(
+                    const TextStyle(color: Colors.white),
+                  ),
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
-                    Text(
-                      'Search',
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 249, 249, 249),
-                      ),
-                    ),
-                  ],
+                  ),
+                  onSubmitted: (value) {},
                 ),
               ),
               SizedBox(height: 25),
