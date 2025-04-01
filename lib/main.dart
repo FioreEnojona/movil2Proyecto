@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:movil2Proyecto/Home_Screen.dart';
-import 'package:movil2Proyecto/Añadir_Receta.dart';
-import 'package:movil2Proyecto/Búsqueda.dart';
-import 'package:movil2Proyecto/editar_perfil.dart';
-import 'package:movil2Proyecto/Otras_Recetas.dart';
+import 'package:proyectomovil2flutter/Anadir_Receta.dart';
+import 'package:proyectomovil2flutter/Busqueda.dart';
+import 'package:proyectomovil2flutter/Home_Screen.dart';
+import 'package:proyectomovil2flutter/Otras_Recetas.dart';
+import 'package:proyectomovil2flutter/editar_perfil.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,11 +14,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => const HomeScreen(),
-        '/Añadir_Receta': (context) => const AñadirRecetaScreen(),
+        '/': (context) => const Home_Screen(),
+        '/Añadir_Receta': (context) => const AnadirRecetaScreen(),
         '/Busqueda': (context) => const BusquedaScreen(),
         '/editar_perfil': (context) => const EditarPerfilScreen(),
         '/Otras_Recetas': (context) => const OtrasRecetasScreen(),
@@ -27,19 +27,3 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 40, 230, 0),
-        title: const Text("PROYECTO"),
-      ),
-      body: const Center(
-        child: Text("Grupo 7"),
-      ),
-    );
-  }
-}
