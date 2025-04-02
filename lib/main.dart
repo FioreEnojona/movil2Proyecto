@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movil2proyecto/screen/verReceta.dart';
-import 'package:proyectomovil2flutter/registrar.dart';
-
-
 
 void main() {
   runApp(const MyApp());
@@ -18,13 +15,4 @@ class MyApp extends StatelessWidget {
       home: VerRecetaPage(),
     );
   }
-}
-
-   return const MaterialApp(
-    
-     home:Registrar(),
-
-   );
-
-}
 }
