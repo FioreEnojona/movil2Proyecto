@@ -2,69 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movil2proyecto/notificaciones.dart';
 
 class HomeScreen extends StatelessWidget {
-  final List<Map<String, String>> recentSearches = [
-    {
-      'title': 'Arándanos',
-      'date': 'Hace 6 días',
-      'image':
-          'https://cdn.pixabay.com/photo/2016/03/05/19/02/blueberries-1238249_1280.jpg',
-    },
-    {
-      'title': 'Espaguetis',
-      'date': '19 mar 2025',
-      'newRecipes': '6 recetas nuevas',
-      'image':
-          'https://cdn.pixabay.com/photo/2017/11/08/22/18/spaghetti-2931846_1280.jpg',
-    },
-    {
-      'title': 'Arroz',
-      'date': '19 mar 2025',
-      'newRecipes': '+10 recetas nuevas',
-      'image':
-          'https://cdn.pixabay.com/photo/2016/10/23/09/37/fried-rice-1762493_1280.jpg',
-    },
-  ];
-
-  final List<Map<String, String>> latestRecipes = [
-    {
-      'title': 'Alambre de pollo con nopal',
-      'author': 'Brenda Martinez',
-      'image':
-          'https://cdn.pixabay.com/photo/2022/06/07/21/00/chicken-7249273_1280.jpg',
-    },
-    {
-      'title': 'Galletas con chispas de chocolate',
-      'author': 'Ángeles Ávila',
-      'image':
-          'https://cdn.pixabay.com/photo/2020/04/22/17/24/strawberry-5079237_1280.jpg',
-    },
-    {
-      'title': 'Risotto con pollo              sabroso',
-      'author': 'Angerith Calvo',
-      'image':
-          'https://cdn.pixabay.com/photo/2018/08/29/19/03/steak-3640560_1280.jpg',
-    },
-    {
-      'title': 'Alambre de pollo con nopal',
-      'author': 'Brenda Martinez',
-      'image':
-          'https://cdn.pixabay.com/photo/2022/06/07/21/00/chicken-7249273_1280.jpg',
-    },
-    {
-      'title': 'Galletas con chispas de chocolate',
-      'author': 'Ángeles Ávila',
-      'image':
-          'https://cdn.pixabay.com/photo/2020/04/22/17/24/strawberry-5079237_1280.jpg',
-    },
-    {
-      'title': 'Risotto con pollo             delicioso  ',
-      'author': 'Angerith Calvo',
-      'image':
-          'https://cdn.pixabay.com/photo/2018/08/29/19/03/steak-3640560_1280.jpg',
-    },
-  ];
-
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,6 +111,68 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+final List<Map<String, String>> recentSearches = [
+  {
+    'title': 'Arándanos',
+    'date': 'Hace 6 días',
+    'image':
+        'https://cdn.pixabay.com/photo/2016/03/05/19/02/blueberries-1238249_1280.jpg',
+  },
+  {
+    'title': 'Espaguetis',
+    'date': '19 mar 2025',
+    'newRecipes': '6 recetas nuevas',
+    'image':
+        'https://cdn.pixabay.com/photo/2017/11/08/22/18/spaghetti-2931846_1280.jpg',
+  },
+  {
+    'title': 'Arroz',
+    'date': '19 mar 2025',
+    'newRecipes': '+10 recetas nuevas',
+    'image':
+        'https://cdn.pixabay.com/photo/2016/10/23/09/37/fried-rice-1762493_1280.jpg',
+  },
+];
+
+final List<Map<String, String>> latestRecipes = [
+  {
+    'title': 'Alambre de pollo con nopal',
+    'author': 'Brenda Martinez',
+    'image':
+        'https://cdn.pixabay.com/photo/2022/06/07/21/00/chicken-7249273_1280.jpg',
+  },
+  {
+    'title': 'Galletas con chispas de chocolate',
+    'author': 'Ángeles Ávila',
+    'image':
+        'https://cdn.pixabay.com/photo/2020/04/22/17/24/strawberry-5079237_1280.jpg',
+  },
+  {
+    'title': 'Risotto con pollo              sabroso',
+    'author': 'Angerith Calvo',
+    'image':
+        'https://cdn.pixabay.com/photo/2018/08/29/19/03/steak-3640560_1280.jpg',
+  },
+  {
+    'title': 'Alambre de pollo con nopal',
+    'author': 'Brenda Martinez',
+    'image':
+        'https://cdn.pixabay.com/photo/2022/06/07/21/00/chicken-7249273_1280.jpg',
+  },
+  {
+    'title': 'Galletas con chispas de chocolate',
+    'author': 'Ángeles Ávila',
+    'image':
+        'https://cdn.pixabay.com/photo/2020/04/22/17/24/strawberry-5079237_1280.jpg',
+  },
+  {
+    'title': 'Risotto con pollo             delicioso  ',
+    'author': 'Angerith Calvo',
+    'image':
+        'https://cdn.pixabay.com/photo/2018/08/29/19/03/steak-3640560_1280.jpg',
+  },
+];
 
 TextStyle _titleStyle() {
   return TextStyle(
