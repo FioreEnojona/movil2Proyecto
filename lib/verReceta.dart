@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class VerRecetaPage extends StatelessWidget {
-  const VerRecetaPage({super.key});
+  const VerRecetaPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
