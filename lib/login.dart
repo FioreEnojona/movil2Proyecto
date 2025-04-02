@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proyectomovil2flutter/screen/home_screen.dart';
+import 'package:movil2proyecto/Home_Screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -47,9 +47,9 @@ class LoginPage extends StatelessWidget {
       }
 
       if (user == 'usuario' && password == '1234') {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (context) => const HomePage()));
       } else {
         _showError(context, 'Error: Cuenta no registrada.');
       }
@@ -62,11 +62,7 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.cake,
-                size: 100,
-                color: Color(0xFFE48826),
-              ),
+              const Icon(Icons.cake, size: 100, color: Color(0xFFE48826)),
               const SizedBox(height: 10),
               const Text(
                 'Inicio de Sesión',
@@ -99,7 +95,9 @@ class LoginPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const RegisterPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterPage(),
+                    ),
                   );
                 },
                 child: const Text(
@@ -134,9 +132,9 @@ class RegisterPage extends StatelessWidget {
         return;
       }
 
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => const HomePage()));
     }
 
     return Scaffold(
@@ -162,7 +160,11 @@ class RegisterPage extends StatelessWidget {
               const SizedBox(height: 10),
               _buildInputField(nameController, 'Nombre', Icons.person),
               const SizedBox(height: 10),
-              _buildInputField(emailController, 'Correo Electrónico', Icons.email),
+              _buildInputField(
+                emailController,
+                'Correo Electrónico',
+                Icons.email,
+              ),
               const SizedBox(height: 10),
               _buildInputField(
                 passwordController,
@@ -247,16 +249,17 @@ Widget _buildInputField(
 void _showError(BuildContext context, String message) {
   showDialog(
     context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Error'),
-      content: Text(message),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('OK'),
+    builder:
+        (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
         ),
-      ],
-    ),
   );
 }
 
