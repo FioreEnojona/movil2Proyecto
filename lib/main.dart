@@ -8,7 +8,7 @@ import 'package:movil2proyecto/registrar.dart';
 import 'package:movil2proyecto/verReceta.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
