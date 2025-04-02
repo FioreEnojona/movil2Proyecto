@@ -15,7 +15,7 @@ class Home_Screen extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/Añadir_Receta');
+              Navigator.pushNamed(context, '/Registrar');
             },
             child: const Text('Añadir Receta'),
           ),
@@ -33,7 +33,7 @@ class Home_Screen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/Otras_Recetas');
+              Navigator.pushNamed(context, '/Ver_Recetas');
             },
             child: const Text('Recetas de Otros'),
           ),

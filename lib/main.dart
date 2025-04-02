@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:proyectomovil2flutter/Anadir_Receta.dart';
-import 'package:proyectomovil2flutter/Busqueda.dart';
-import 'package:proyectomovil2flutter/Home_Screen.dart';
-import 'package:proyectomovil2flutter/Otras_Recetas.dart';
-import 'package:proyectomovil2flutter/editar_perfil.dart';
+import 'package:movil2proyecto/Anadir_Receta.dart';
+import 'package:movil2proyecto/Busqueda.dart';
+import 'package:movil2proyecto/Home_Screen.dart';
+import 'package:movil2proyecto/Otras_Recetas.dart';
+import 'package:movil2proyecto/editar_perfil.dart';
+import 'package:movil2proyecto/registrar.dart';
+import 'package:movil2proyecto/verReceta.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,10 +20,10 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const Home_Screen(),
-        '/Añadir_Receta': (context) => const AnadirRecetaScreen(),
+        '/Registrar': (context) => const Registrar(),
         '/Busqueda': (context) => const BusquedaScreen(),
         '/editar_perfil': (context) => const EditarPerfilScreen(),
-        '/Otras_Recetas': (context) => const OtrasRecetasScreen(),
+        '/Ver_Recetas': (context) => const VerRecetaPage(),
       },
     );
   }
