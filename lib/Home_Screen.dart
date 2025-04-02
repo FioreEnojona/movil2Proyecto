@@ -5,6 +5,7 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
+    final searchController = SearchController();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(233, 241, 139, 30),
