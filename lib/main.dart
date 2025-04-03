@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
         '/editar_perfil': (context) => const EditarPerfilScreen(),
         '/Ver_Recetas': (context) => const VerRecetaPage(),
         '/Notificaciones': (context) => const Notificaciones(),
-        '/Busqueda': (context) => const BusquedaScreen(),
         '/Recetas_Otros': (context) => const RecetasOtros(),
       },
     );
