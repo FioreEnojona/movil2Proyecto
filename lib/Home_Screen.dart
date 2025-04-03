@@ -1,122 +1,247 @@
 import 'package:flutter/material.dart';
-import 'package:movil2proyecto/notificaciones.dart';
+import 'package:movil2proyecto/Busqueda.dart';
+import 'package:movil2proyecto/verReceta.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+
+  void _navigateToPage(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  final List<Widget> _pages = [
+    const HomePage(),
+    const BusquedaScreen(),
+    const VerRecetaPage(),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final searchController = SearchController();
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(233, 241, 139, 30),
-        title: const Text("Pagina Principal"),
-        actions: <Widget>[
+        backgroundColor: const Color.fromARGB(255, 250, 150, 0),
+        centerTitle: true,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipOval(
+              child: Image.asset(
+                'assets/images/logo_chocobite.jpg',
+                height: 36,
+                width: 36,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(
+                    Icons.image_not_supported,
+                    color: Colors.white,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'ChocoBite',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        actions: [
           IconButton(
-            icon: const Icon(Icons.add_alert),
+            icon: const Icon(Icons.logout),
+            tooltip: 'Cerrar sesión',
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Notificaciones()),
+              showDialog(
+                context: context,
+                builder:
+                    (context) => AlertDialog(
+                      title: const Text("Cerrar sesión"),
+                      content: const Text(
+                        "¿Estás seguro de que querés cerrar sesión?",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text("Cancelar"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/',
+                              (route) => false,
+                            );
+                          },
+                          child: const Text("Cerrar sesión"),
+                        ),
+                      ],
+                    ),
               );
             },
           ),
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 25),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: SearchBar(
-                  controller: searchController,
-                  padding: const WidgetStatePropertyAll<EdgeInsets>(
-                    EdgeInsets.symmetric(horizontal: 16.0),
-                  ),
-                  leading: const Icon(Icons.search),
-                  hintText: 'Buscar...',
-                  hintStyle: WidgetStateProperty.all(
-                    const TextStyle(color: Colors.white70),
-                  ),
-                  backgroundColor: WidgetStateProperty.all(
-                    const Color.fromARGB(233, 241, 139, 30),
-                  ),
-                  textStyle: WidgetStateProperty.all(
-                    const TextStyle(color: Colors.white),
-                  ),
-                  shape: WidgetStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                  onSubmitted: (value) {},
-                ),
-              ),
-              SizedBox(height: 25),
-              SizedBox(height: 25),
-              Text(
-                'Ingredientes Más Buscados',
-                style: TextStyle(
-                  color: const Color.fromARGB(255, 252, 115, 3),
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 25),
-              Wrap(
-                spacing: 10.0,
-                runSpacing: 10.0,
-                children: List.generate(cardNames.length, (index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) =>
-                                  RecipeScreen(ingredient: cardNames[index]),
-                        ),
-                      );
-                    },
-                    child: _SampleCard(cardName: cardNames[index]),
-                  );
-                }),
-              ),
-              SizedBox(height: 20),
-              Text('Búsquedas Recientes', style: _titleStyle()),
-              SizedBox(height: 10),
-              Column(
-                children:
-                    recentSearches
-                        .map((search) => RecentSearchTile(search))
-                        .toList(),
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Recetas Publicadas Últimamente',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 252, 115, 3),
-                ),
-              ),
-              SizedBox(height: 10),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children:
-                      latestRecipes
-                          .map((recipe) => RecipeCard(recipe))
-                          .toList(),
-                ),
-              ),
-            ],
+      body: _pages[_currentIndex],
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: _navigateToPage,
+        indicatorColor: const Color.fromARGB(255, 255, 168, 7),
+        selectedIndex: _currentIndex,
+        destinations: const [
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home, color: Colors.white),
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
           ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.search, color: Colors.white),
+            icon: Icon(Icons.search_outlined),
+            label: 'Buscar',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.receipt_long, color: Colors.white),
+            icon: Icon(Icons.receipt_long_outlined),
+            label: 'Recetas',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final searchController = SearchController();
+
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 25),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: SearchBar(
+                controller: searchController,
+                padding: const WidgetStatePropertyAll<EdgeInsets>(
+                  EdgeInsets.symmetric(horizontal: 16.0),
+                ),
+                leading: const Icon(Icons.search),
+                hintText: 'Buscar...',
+                hintStyle: WidgetStateProperty.all(
+                  const TextStyle(color: Colors.white70),
+                ),
+                backgroundColor: WidgetStateProperty.all(
+                  const Color.fromARGB(233, 241, 139, 30),
+                ),
+                textStyle: WidgetStateProperty.all(
+                  const TextStyle(color: Colors.white),
+                ),
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+                onSubmitted: (value) {},
+              ),
+            ),
+            const SizedBox(height: 25),
+            Text(
+              'Ingredientes Más Buscados',
+              style: TextStyle(
+                color: const Color.fromARGB(255, 252, 115, 3),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 25),
+            Wrap(
+              spacing: 10.0,
+              runSpacing: 10.0,
+              children: List.generate(cardNames.length, (index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) =>
+                                RecipeScreen(ingredient: cardNames[index]),
+                      ),
+                    );
+                  },
+                  child: _SampleCard(cardName: cardNames[index]),
+                );
+              }),
+            ),
+            const SizedBox(height: 20),
+            Text('Búsquedas Recientes', style: _titleStyle()),
+            const SizedBox(height: 10),
+            Column(
+              children:
+                  recentSearches
+                      .map((search) => RecentSearchTile(search))
+                      .toList(),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Recetas Publicadas Últimamente',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: const Color.fromARGB(255, 252, 115, 3),
+              ),
+            ),
+            const SizedBox(height: 10),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children:
+                    latestRecipes.map((recipe) => RecipeCard(recipe)).toList(),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+}
+
+class RecipeScreen extends StatelessWidget {
+  final String ingredient;
+
+  const RecipeScreen({super.key, required this.ingredient});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Recetas con $ingredient')),
+      body: Center(
+        child: Text('Aquí irían las recetas relacionadas con $ingredient'),
+      ),
+    );
+  }
+}
+
+TextStyle _titleStyle() {
+  return const TextStyle(
+    color: Color.fromARGB(255, 252, 115, 3),
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
 }
 
 final List<Map<String, String>> recentSearches = [
@@ -181,14 +306,6 @@ final List<Map<String, String>> latestRecipes = [
   },
 ];
 
-TextStyle _titleStyle() {
-  return TextStyle(
-    color: Color.fromARGB(255, 252, 115, 3),
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-  );
-}
-
 final List<String> cardNames = [
   'Pollo',
   'Carne',
@@ -241,7 +358,7 @@ class _SampleCard extends StatelessWidget {
         child: Center(
           child: Text(
             cardName,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -260,22 +377,6 @@ class _SampleCard extends StatelessWidget {
   }
 }
 
-class RecipeScreen extends StatelessWidget {
-  final String ingredient;
-
-  const RecipeScreen({super.key, required this.ingredient});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Recetas con $ingredient')),
-      body: Center(
-        child: Text('Aquí irían las recetas relacionadas con $ingredient'),
-      ),
-    );
-  }
-}
-
 class RecentSearchTile extends StatelessWidget {
   final Map<String, String> search;
   const RecentSearchTile(this.search, {super.key});
@@ -286,7 +387,7 @@ class RecentSearchTile extends StatelessWidget {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
-        contentPadding: EdgeInsets.all(8),
+        contentPadding: const EdgeInsets.all(8),
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Image.network(
@@ -298,19 +399,22 @@ class RecentSearchTile extends StatelessWidget {
         ),
         title: Text(
           search['title']!,
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.orange,
+          ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               search['date']!,
-              style: TextStyle(color: Colors.black87, fontSize: 12),
+              style: const TextStyle(color: Colors.black87, fontSize: 12),
             ),
             if (search.containsKey('newRecipes'))
               Text(
                 search['newRecipes']!,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.orange,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
@@ -331,7 +435,7 @@ class RecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 160,
-      margin: EdgeInsets.only(right: 10),
+      margin: const EdgeInsets.only(right: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -344,14 +448,20 @@ class RecipeCard extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             recipe['title']!,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.orange,
+            ),
           ),
-          Text(recipe['author']!, style: TextStyle(color: Colors.black87)),
+          Text(
+            recipe['author']!,
+            style: const TextStyle(color: Colors.black87),
+          ),
         ],
       ),
     );

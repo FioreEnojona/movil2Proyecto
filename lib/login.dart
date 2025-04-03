@@ -1,33 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movil2proyecto/Home_Screen.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Login Page',
-      theme: ThemeData(
-        primaryColor: const Color(0xFFE48826),
-        scaffoldBackgroundColor: const Color(0xFFECC8C9),
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: const Color(0xFFE48826),
-          secondary: const Color(0xFFBB99B7),
-        ),
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(color: Colors.brown, fontFamily: 'Arial'),
-        ),
-      ),
-      home: const LoginPage(),
-    );
-  }
-}
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -47,9 +18,7 @@ class LoginPage extends StatelessWidget {
       }
 
       if (user == 'usuario' && password == '1234') {
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (context) => const HomePage()));
+        Navigator.pushReplacementNamed(context, '/Home');
       } else {
         _showError(context, 'Error: Cuenta no registrada.');
       }
@@ -132,9 +101,7 @@ class RegisterPage extends StatelessWidget {
         return;
       }
 
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (context) => const HomePage()));
+      Navigator.pushReplacementNamed(context, '/Home');
     }
 
     return Scaffold(
@@ -198,21 +165,6 @@ class RegisterPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Colors.orange,
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      home: HomeScreen(),
     );
   }
 }
