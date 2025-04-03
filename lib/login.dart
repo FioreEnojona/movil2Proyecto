@@ -17,8 +17,9 @@ class LoginPage extends StatelessWidget {
         return;
       }
 
+      // En el método login, cambia esta línea:
       if (user == 'usuario' && password == '1234') {
-        Navigator.pushReplacementNamed(context, '/Home');
+        Navigator.pushReplacementNamed(context, '/Menu');
       } else {
         _showError(context, 'Error: Cuenta no registrada.');
       }
@@ -101,7 +102,7 @@ class RegisterPage extends StatelessWidget {
         return;
       }
 
-      Navigator.pushReplacementNamed(context, '/Home');
+      Navigator.pushReplacementNamed(context, '/Menu');
     }
 
     return Scaffold(
