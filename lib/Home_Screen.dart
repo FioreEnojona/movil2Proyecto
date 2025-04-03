@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'verReceta.dart';
+import 'Busqueda.dart';
+import 'recetasOtros.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -24,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _pages.addAll([
       HomePage(onTap: _navigateToPage),
       const BusquedaScreen(),
-      const VerRecetasScreen(),
+      const VerRecetaPage(),
     ]);
   }
 
@@ -33,16 +36,38 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 250, 150, 0),
-        title: const Center(
-          child: Text(
-            "Chocobites",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
+        title: SizedBox(
+          height: 40,
+          child: Image.asset('assets/images/logo_chocobite.jpg'), // 👈 Aquí se carga el logo
         ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Cerrar sesión',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("Cerrar sesión"),
+                  content: const Text("¿Estás seguro de que querés cerrar sesión?"),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Cancelar"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                      },
+                      child: const Text("Cerrar sesión"),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: NavigationBar(
@@ -77,65 +102,76 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, '/Registrar'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text(
-              'Añadir Receta',
-              style: TextStyle(fontSize: 16, color: Colors.white),
-            ),
+          _buildMenuButton(
+            context,
+            icon: Icons.add_circle_outline,
+            label: 'Añadir Receta',
+            route: '/Registrar',
           ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, '/editar_perfil'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor:  Colors.orange,
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text(
-              'Editar Perfil',
-              style: TextStyle(fontSize: 16, color: Colors.white),
-            ),
+          const SizedBox(height: 20),
+          _buildMenuButton(
+            context,
+            icon: Icons.edit,
+            label: 'Editar Perfil',
+            route: '/editar_perfil',
+          ),
+          const SizedBox(height: 20),
+          _buildMenuButton(
+            context,
+            icon: Icons.notifications_none,
+            label: 'Ver Notificaciones',
+            route: '/Notificaciones',
+          ),
+          const SizedBox(height: 20),
+          _buildMenuButton(
+            context,
+            icon: Icons.people_alt_outlined,
+            label: 'Ver Receta de Otros',
+            route: '/Recetas_Otros',
           ),
         ],
       ),
     );
   }
-}
 
-class BusquedaScreen extends StatelessWidget {
-  const BusquedaScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Buscar Recetas')),
-      body: const Center(child: Text('Buscar Recetas')),
-    );
-  }
-}
-
-class VerRecetasScreen extends StatelessWidget {
-  const VerRecetasScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Recetas de Otros')),
-      body: const Center(child: Text('Recetas de Otros')),
+  Widget _buildMenuButton(BuildContext context,
+      {required IconData icon, required String label, required String route}) {
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, route),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+        decoration: BoxDecoration(
+          color: Colors.orange,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            )
+          ],
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 28, color: Colors.white),
+            const SizedBox(width: 20),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const Spacer(),
+            const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.white),
+          ],
+        ),
+      ),
     );
   }
 }
