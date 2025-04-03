@@ -36,11 +36,32 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 250, 150, 0),
-        title: SizedBox(
-          height: 40,
-          child: Image.asset('assets/images/logo_chocobite.jpg'), // 👈 Aquí se carga el logo
-        ),
         centerTitle: true,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipOval(
+              child: Image.asset(
+                'assets/images/logo_chocobite.jpg',
+                height: 36,
+                width: 36,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(Icons.image_not_supported, color: Colors.white);
+                },
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'ChocoBite',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
