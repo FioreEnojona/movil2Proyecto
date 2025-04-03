@@ -9,7 +9,7 @@ import 'package:movil2proyecto/Busqueda.dart';
 import 'package:movil2proyecto/recetasOtros.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,9 +21,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => const LoginPage(),
-        '/Home': (context) => const HomeScreen(),
-        '/Registrarte': (context) => const RegisterPage(),
+        '/': (context) => const Menu(),
+        '/Inicio': (context) => const HomeScreen(),
+        '/Registrar': (context) => const Registrar(),
+        '/Busqueda': (context) => const BusquedaScreen(),
         '/editar_perfil': (context) => const EditarPerfilScreen(),
         '/Ver_Recetas': (context) => const VerRecetaPage(),
         '/Registrar': (context) => const Registrar(),
