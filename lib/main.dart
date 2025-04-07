@@ -6,7 +6,7 @@ import 'package:movil2proyecto/verReceta.dart';
 import 'package:movil2proyecto/registrar.dart';
 import 'package:movil2proyecto/notificaciones.dart';
 import 'package:movil2proyecto/Busqueda.dart'; 
-import 'package:movil2proyecto/recetasOtros.dart';
+
 import 'package:movil2proyecto/db/database_helper.dart'; // Importar el DatabaseHelper
 
 void main() async {
@@ -32,11 +32,11 @@ class MyApp extends StatelessWidget {
         '/Home': (context) => const HomeScreen(),
         '/Registrarte': (context) => const RegisterPage(),
         '/editar_perfil': (context) => const EditarPerfilScreen(),
-        '/Ver_Recetas': (context) => const VerRecetaPage(),
+        '/Ver_Recetas': (context) => const VerRecetas(),
         '/Registrar': (context) => const Registrar(),
         '/Notificaciones': (context) => const Notificaciones(),
         '/Busqueda': (context) => const BusquedaScreen(), 
-        '/Recetas_Otros': (context) => const RecetasOtros(),
+       
       },
       theme: ThemeData(
         primarySwatch: Colors.orange,

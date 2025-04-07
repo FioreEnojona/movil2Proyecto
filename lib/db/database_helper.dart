@@ -1,6 +1,8 @@
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart';
 import '../models/user.dart';
+import '../models/recetas.dart';
+import 'package:intl/intl.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -18,23 +20,38 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     try {
-      // Inicializa FFI en Windows y Linux
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;
-      
+
       String path = join(await getDatabasesPath(), 'app_database.db');
       print("Ruta de la base de datos: $path");
-      
+
       return await databaseFactory.openDatabase(
         path,
         options: OpenDatabaseOptions(
-          version: 1,
+          version: 2,
           onCreate: _createDB,
+          onUpgrade: _upgradeDB,
         ),
       );
     } catch (e) {
       print("Error al inicializar la base de datos: $e");
       rethrow;
+    }
+  }
+
+  Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Verificamos si la columna user_id ya existe
+      var columns = await db.rawQuery("PRAGMA table_info(recipes)");
+      bool hasUserId = columns.any((col) => col['name'] == 'user_id');
+
+      if (!hasUserId) {
+        await db.execute("ALTER TABLE recipes ADD COLUMN user_id INTEGER");
+        print("Columna 'user_id' añadida a la tabla recipes.");
+
+        // Opcional: añadir restricciones (no se puede hacer con ALTER TABLE fácilmente en SQLite)
+      }
     }
   }
 
@@ -50,25 +67,47 @@ class DatabaseHelper {
         )
       ''');
       print("Tabla users creada correctamente");
+
+      await _createRecipesTable(db);
     } catch (e) {
-      print("Error al crear la tabla users: $e");
+      print("Error al crear las tablas: $e");
       rethrow;
     }
   }
 
-  // Métodos CRUD para usuarios
+  Future<void> _createRecipesTable(Database db) async {
+    try {
+      print("Creando tabla recipes...");
+      await db.execute('''
+        CREATE TABLE recipes(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER NOT NULL,
+          title TEXT NOT NULL,
+          description TEXT,
+          ingredients TEXT NOT NULL,
+          instructions TEXT NOT NULL,
+          image_path TEXT,
+          created_at TEXT NOT NULL,
+          FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        )
+      ''');
+      print("Tabla recipes creada correctamente");
+    } catch (e) {
+      print("Error al crear la tabla recipes: $e");
+      rethrow;
+    }
+  }
+
+  // CRUD USUARIOS
   Future<int> insertUser(User user) async {
     try {
       Database db = await database;
-      
-      // Verificamos si la tabla existe
       var tables = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='users'");
       if (tables.isEmpty) {
         print("ERROR: La tabla 'users' no existe");
         return -1;
       }
-      
-      print("Mapa del usuario a insertar: ${user.toMap()}");
+
       int result = await db.insert('users', user.toMap());
       print("Usuario insertado con ID: $result");
       return result;
@@ -101,7 +140,7 @@ class DatabaseHelper {
         where: 'email = ? AND password = ?',
         whereArgs: [email, password],
       );
-     
+
       if (result.isNotEmpty) {
         return User.fromMap(result.first);
       }
@@ -120,7 +159,7 @@ class DatabaseHelper {
         where: 'id = ?',
         whereArgs: [id],
       );
-     
+
       if (result.isNotEmpty) {
         return User.fromMap(result.first);
       }
@@ -135,12 +174,7 @@ class DatabaseHelper {
     try {
       Database db = await database;
       List<Map<String, dynamic>> result = await db.query('users');
-      
-      print("Resultados obtenidos: ${result.length}");
-      
-      return List.generate(result.length, (i) {
-        return User.fromMap(result[i]);
-      });
+      return List.generate(result.length, (i) => User.fromMap(result[i]));
     } catch (e) {
       print("Error al obtener todos los usuarios: $e");
       return [];
@@ -175,4 +209,104 @@ class DatabaseHelper {
       return -1;
     }
   }
+
+  // CRUD RECETAS
+  Future<int> insertRecipe(Recipe recipe) async {
+    try {
+      Database db = await database;
+      var tables = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='recipes'");
+      if (tables.isEmpty) {
+        print("ERROR: La tabla 'recipes' no existe");
+        return -1;
+      }
+
+      int result = await db.insert('recipes', recipe.toMap());
+      print("Receta insertada con ID: $result");
+      return result;
+    } catch (e) {
+      print("Error al insertar receta: $e");
+      return -1;
+    }
+  }
+
+  Future<Recipe?> getRecipe(int id) async {
+    try {
+      Database db = await database;
+      List<Map<String, dynamic>> result = await db.query(
+        'recipes',
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+
+      if (result.isNotEmpty) {
+        return Recipe.fromMap(result.first);
+      }
+      return null;
+    } catch (e) {
+      print("Error al obtener receta: $e");
+      return null;
+    }
+  }
+
+  Future<List<Recipe>> getAllRecipes() async {
+    try {
+      Database db = await database;
+      List<Map<String, dynamic>> result = await db.query('recipes');
+      return List.generate(result.length, (i) => Recipe.fromMap(result[i]));
+    } catch (e) {
+      print("Error al obtener todas las recetas: $e");
+      return [];
+    }
+  }
+
+  Future<List<Recipe>> getRecipesByUser(int userId) async {
+    try {
+      Database db = await database;
+      List<Map<String, dynamic>> result = await db.query(
+        'recipes',
+        where: 'user_id = ?',
+        whereArgs: [userId],
+        orderBy: 'created_at DESC',
+      );
+      return List.generate(result.length, (i) => Recipe.fromMap(result[i]));
+    } catch (e) {
+      print("Error al obtener recetas del usuario: $e");
+      return [];
+    }
+  }
+
+  Future<int> updateRecipe(Recipe recipe) async {
+    try {
+      Database db = await database;
+      return await db.update(
+        'recipes',
+        recipe.toMap(),
+        where: 'id = ?',
+        whereArgs: [recipe.id],
+      );
+    } catch (e) {
+      print("Error al actualizar receta: $e");
+      return -1;
+    }
+  }
+
+  Future<int> deleteRecipe(int id) async {
+    try {
+      Database db = await database;
+      return await db.delete(
+        'recipes',
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+    } catch (e) {
+      print("Error al eliminar receta: $e");
+      return -1;
+    }
+  }
+
+  String getCurrentDateTime() {
+    return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+  }
+
+  
 }

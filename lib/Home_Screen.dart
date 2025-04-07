@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'verReceta.dart';
 import 'Busqueda.dart';
-import 'recetasOtros.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _pages.addAll([
       HomePage(onTap: _navigateToPage),
       const BusquedaScreen(),
-      const VerRecetaPage(),
+      const VerRecetas(),
     ]);
   }
 
@@ -124,73 +124,99 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildMenuButton(
-            context,
-            icon: Icons.add_circle_outline,
-            label: 'Añadir Receta',
-            route: '/Registrar',
+          const Text(
+            "Hola, ChocoChef!",
+            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 5),
+          const Text(
+            "¡Bienvenido de nuevo! ¿Qué deseas hacer hoy?",
+            style: TextStyle(fontSize: 16, color: Colors.black54),
           ),
           const SizedBox(height: 20),
-          _buildMenuButton(
-            context,
-            icon: Icons.edit,
-            label: 'Editar Perfil',
-            route: '/editar_perfil',
+
+          // Card de Bienvenida
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 255, 240, 200),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.lightbulb_outline, size: 40, color: Colors.orange),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text("¡Consejo del día!", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text("Prueba una receta nueva esta semana 🍰"),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 20),
-          _buildMenuButton(
-            context,
-            icon: Icons.notifications_none,
-            label: 'Ver Notificaciones',
-            route: '/Notificaciones',
+
+          const SizedBox(height: 30),
+
+          const Text(
+            "Acciones Rápidas",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 20),
-          _buildMenuButton(
-            context,
-            icon: Icons.people_alt_outlined,
-            label: 'Ver Receta de Otros',
-            route: '/Recetas_Otros',
+          const SizedBox(height: 15),
+
+          Wrap(
+            spacing: 20,
+            runSpacing: 20,
+            children: [
+              _buildActionCard(context, Icons.add_circle_outline, "Añadir Receta", '/Registrar'),
+              _buildActionCard(context, Icons.edit, "Editar Perfil", '/editar_perfil'),
+              _buildActionCard(context, Icons.notifications_none, "Notificaciones", '/Notificaciones'),
+              _buildActionCard(context, Icons.people_alt_outlined, "Recetas de Otros", '/Recetas_Otros'),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMenuButton(BuildContext context,
-      {required IconData icon, required String label, required String route}) {
+  Widget _buildActionCard(BuildContext context, IconData icon, String label, String route) {
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, route),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+        width: (MediaQuery.of(context).size.width / 2) - 30,
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.orange,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
           boxShadow: const [
             BoxShadow(
               color: Colors.black26,
               blurRadius: 6,
-              offset: Offset(0, 3),
+              offset: Offset(0, 4),
             )
           ],
         ),
-        child: Row(
+        child: Column(
           children: [
-            Icon(icon, size: 28, color: Colors.white),
-            const SizedBox(width: 20),
+            Icon(icon, size: 32, color: Colors.white),
+            const SizedBox(height: 10),
             Text(
               label,
               style: const TextStyle(
-                fontSize: 18,
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
               ),
-            ),
-            const Spacer(),
-            const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.white),
+              textAlign: TextAlign.center,
+            )
           ],
+          
         ),
       ),
     );

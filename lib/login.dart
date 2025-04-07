@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movil2proyecto/db/database_helper.dart';
 import 'package:movil2proyecto/models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,25 +17,30 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
 
   Future<void> login() async {
-    String email = userController.text;
-    String password = passwordController.text;
-    
-    print("Intentando iniciar sesión con: $email");
+  String email = userController.text;
+  String password = passwordController.text;
+  
+  print("Intentando iniciar sesión con: $email");
 
-    if (email.isEmpty || password.isEmpty) {
-      _showError(context, 'Por favor, ingrese usuario y contraseña.');
-      return;
-    }
-
-    User? user = await dbHelper.verifyLogin(email, password);
-    print("Resultado de verificación: ${user != null ? 'Usuario encontrado' : 'Usuario no encontrado'}");
-
-    if (user != null) {
-      Navigator.pushReplacementNamed(context, '/Home');
-    } else {
-      _showError(context, 'Error: Cuenta no registrada o credenciales incorrectas.');
-    }
+  if (email.isEmpty || password.isEmpty) {
+    _showError(context, 'Por favor, ingrese usuario y contraseña.');
+    return;
   }
+
+  User? user = await dbHelper.verifyLogin(email, password);
+  print("Resultado de verificación: ${user != null ? 'Usuario encontrado' : 'Usuario no encontrado'}");
+
+  if (user != null) {
+    // Guardar el ID del usuario en SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('userId', user.id!); // Asegúrate de que user.id no sea nulo
+    print("ID de usuario guardado en SharedPreferences: ${user.id}");
+    
+    Navigator.pushReplacementNamed(context, '/Home');
+  } else {
+    _showError(context, 'Error: Cuenta no registrada o credenciales incorrectas.');
+  }
+}
   
 
   @override
