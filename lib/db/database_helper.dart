@@ -102,7 +102,9 @@ class DatabaseHelper {
   Future<int> insertUser(User user) async {
     try {
       Database db = await database;
-      var tables = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='users'");
+      var tables = await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='users'",
+      );
       if (tables.isEmpty) {
         print("ERROR: La tabla 'users' no existe");
         return -1;
@@ -199,11 +201,7 @@ class DatabaseHelper {
   Future<int> deleteUser(int id) async {
     try {
       Database db = await database;
-      return await db.delete(
-        'users',
-        where: 'id = ?',
-        whereArgs: [id],
-      );
+      return await db.delete('users', where: 'id = ?', whereArgs: [id]);
     } catch (e) {
       print("Error al eliminar usuario: $e");
       return -1;
@@ -214,7 +212,9 @@ class DatabaseHelper {
   Future<int> insertRecipe(Recipe recipe) async {
     try {
       Database db = await database;
-      var tables = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='recipes'");
+      var tables = await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='recipes'",
+      );
       if (tables.isEmpty) {
         print("ERROR: La tabla 'recipes' no existe");
         return -1;
@@ -293,11 +293,7 @@ class DatabaseHelper {
   Future<int> deleteRecipe(int id) async {
     try {
       Database db = await database;
-      return await db.delete(
-        'recipes',
-        where: 'id = ?',
-        whereArgs: [id],
-      );
+      return await db.delete('recipes', where: 'id = ?', whereArgs: [id]);
     } catch (e) {
       print("Error al eliminar receta: $e");
       return -1;
@@ -308,5 +304,57 @@ class DatabaseHelper {
     return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
   }
 
-  
+  // Buscar recetas por título (nombre)
+  Future<List<Recipe>> searchRecipesByTitle(String searchTerm) async {
+    try {
+      Database db = await database;
+      List<Map<String, dynamic>> result = await db.query(
+        'recipes',
+        where: 'title LIKE ?',
+        whereArgs: ['%$searchTerm%'],
+        orderBy: 'created_at DESC',
+      );
+      return List.generate(result.length, (i) => Recipe.fromMap(result[i]));
+    } catch (e) {
+      print("Error al buscar recetas por título: $e");
+      return [];
+    }
+  }
+
+  // Buscar recetas por ingrediente
+  Future<List<Recipe>> searchRecipesByIngredient(String searchTerm) async {
+    try {
+      Database db = await database;
+      List<Map<String, dynamic>> result = await db.query(
+        'recipes',
+        where: 'ingredients LIKE ?',
+        whereArgs: ['%$searchTerm%'],
+        orderBy: 'created_at DESC',
+      );
+      return List.generate(result.length, (i) => Recipe.fromMap(result[i]));
+    } catch (e) {
+      print("Error al buscar recetas por ingrediente: $e");
+      return [];
+    }
+  }
+
+  // Método combinado que busca en título e ingredientes
+  Future<List<Recipe>> searchRecipes(String searchTerm) async {
+    try {
+      Database db = await database;
+      List<Map<String, dynamic>> result = await db.rawQuery(
+        '''
+      SELECT * FROM recipes 
+      WHERE title LIKE ? OR ingredients LIKE ?
+      ORDER BY created_at DESC
+    ''',
+        ['%$searchTerm%', '%$searchTerm%'],
+      );
+
+      return List.generate(result.length, (i) => Recipe.fromMap(result[i]));
+    } catch (e) {
+      print("Error al buscar recetas: $e");
+      return [];
+    }
+  }
 }
