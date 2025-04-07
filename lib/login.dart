@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (user != null) {
-      Navigator.pushReplacementNamed(context, '/Home');
+      Navigator.pushReplacementNamed(context, '/Menu');
     } else {
       _showError(
         context,
@@ -492,40 +492,6 @@ void _showInfo(BuildContext context, String message) {
     builder:
         (context) => AlertDialog(
           title: const Text('Error'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-  );
-}
-
-void _showSuccess(BuildContext context, String message) {
-  showDialog(
-    context: context,
-    builder:
-        (context) => AlertDialog(
-          title: const Text('Éxito'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-  );
-}
-
-void _showInfo(BuildContext context, String message) {
-  showDialog(
-    context: context,
-    builder:
-        (context) => AlertDialog(
-          title: const Text('Información'),
           content: Text(message),
           actions: [
             TextButton(

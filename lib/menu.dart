@@ -4,7 +4,7 @@ import 'Busqueda.dart';
 import 'recetasOtros.dart';
 
 class Menu extends StatefulWidget {
-  const Menu({Key? key}) : super(key: key);
+  const Menu({super.key});
 
   @override
   State<Menu> createState() => _MenuState();

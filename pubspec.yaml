@@ -12,7 +12,11 @@ dependencies:
   flutter:
     sdk: flutter  
   sqflite: ^2.3.2
-  sqflite_common_ffi: ^2.3.2  # Necesario para Windows
+  sqflite_common_ffi: ^2.3.2
+  drift: ^2.4.1  # Alternativa moderna a sqflite con mejor soporte multiplataforma
+
+
+
   path: ^1.9.1
   cupertino_icons: ^1.0.8
 

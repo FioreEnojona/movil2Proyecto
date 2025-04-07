@@ -12,10 +12,10 @@ import 'package:movil2proyecto/db/database_helper.dart'; // Importar el Database
 void main() async {
   // Asegurarse de inicializar Flutter antes de usar SQLite
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Inicializar la base de datos
   await DatabaseHelper().database;
-  
+
   runApp(const MyApp());
 }
 
@@ -40,9 +40,7 @@ class MyApp extends StatelessWidget {
       },
       theme: ThemeData(
         primarySwatch: Colors.orange,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFE48826),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFE48826)),
       ),
     );
   }

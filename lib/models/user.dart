@@ -18,7 +18,8 @@ class User {
       'id': id,
       'name': name,
       'email': email,
-      'password': password, // Nota: en producción, deberías cifrar las contraseñas
+      'password':
+          password, // Nota: en producción, deberías cifrar las contraseñas
     };
   }
 

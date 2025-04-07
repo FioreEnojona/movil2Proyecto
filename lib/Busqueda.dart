@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BusquedaScreen extends StatelessWidget {
-  const BusquedaScreen({Key? key}) : super(key: key);
+  const BusquedaScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,10 @@ class BusquedaScreen extends StatelessWidget {
                   labelStyle: TextStyle(color: Colors.orange),
                   prefixIcon: Icon(Icons.search, color: Colors.orange),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                 ),
               ),
             ),
@@ -53,7 +56,10 @@ class BusquedaScreen extends StatelessWidget {
                     ),
                     elevation: 2,
                     child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                       leading: const Icon(Icons.cake, color: Color(0xFFE48826)),
                       title: Text(
                         'Receta ${index + 1}',
