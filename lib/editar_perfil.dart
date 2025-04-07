@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EditarPerfilScreen extends StatelessWidget {
-  const EditarPerfilScreen({Key? key}) : super(key: key);
+  const EditarPerfilScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,10 @@ class EditarPerfilScreen extends StatelessWidget {
           labelText: label,
           prefixIcon: Icon(icon, color: Colors.orange),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
+          ),
         ),
       ),
     );

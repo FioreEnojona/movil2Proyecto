@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../db/database_helper.dart';
-import '../models/recetas.dart';  // Cambiado a recetas.dart según tu estructura
+import '../models/recetas.dart'; // Cambiado a recetas.dart según tu estructura
 import 'package:shared_preferences/shared_preferences.dart';
 import 'registrar.dart'; // Import para navegación de regreso a registro
 
 class VerRecetas extends StatefulWidget {
-  const VerRecetas({Key? key}) : super(key: key);
+  const VerRecetas({super.key});
 
   @override
   State<VerRecetas> createState() => _VerRecetasState();
@@ -52,9 +52,9 @@ class _VerRecetasState extends State<VerRecetas> {
       });
     } catch (e) {
       print("Error al cargar recetas: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al cargar recetas: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error al cargar recetas: $e')));
       setState(() {
         _isLoading = false;
       });
@@ -70,9 +70,9 @@ class _VerRecetasState extends State<VerRecetas> {
       );
     } catch (e) {
       print("Error al eliminar receta: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al eliminar receta: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error al eliminar receta: $e')));
     }
   }
 
@@ -229,7 +229,9 @@ class _VerRecetasState extends State<VerRecetas> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Confirmar eliminación"),
-          content: const Text("¿Estás seguro de que deseas eliminar esta receta? Esta acción no se puede deshacer."),
+          content: const Text(
+            "¿Estás seguro de que deseas eliminar esta receta? Esta acción no se puede deshacer.",
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -255,9 +257,7 @@ class _VerRecetasState extends State<VerRecetas> {
     // Navegamos a la pantalla de registro pasando la receta a editar
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => Registrar(recipeToEdit: recipe),
-      ),
+      MaterialPageRoute(builder: (context) => Registrar(recipeToEdit: recipe)),
     ).then((_) {
       _loadRecipes(); // Recargar recetas al regresar de la página de edición
     });
@@ -275,10 +275,7 @@ class _VerRecetasState extends State<VerRecetas> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(
-              Icons.refresh,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.refresh, color: Colors.white),
             onPressed: () {
               setState(() {
                 _isLoading = true;
@@ -288,131 +285,129 @@ class _VerRecetasState extends State<VerRecetas> {
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: Colors.orange))
-          : _recipes.isEmpty
+      body:
+          _isLoading
+              ? const Center(
+                child: CircularProgressIndicator(color: Colors.orange),
+              )
+              : _recipes.isEmpty
               ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.no_food,
-                        size: 80,
-                        color: Colors.grey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.no_food, size: 80, color: Colors.grey),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "No tienes recetas registradas",
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Registrar(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
                       ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        "No tienes recetas registradas",
-                        style: TextStyle(
-                          fontSize: 18,
+                      child: const Text(
+                        "Registrar nueva receta",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+              : Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "${_recipes.length} receta${_recipes.length > 1 ? 's' : ''} encontrada${_recipes.length > 1 ? 's' : ''}",
+                        style: const TextStyle(
+                          fontSize: 16,
                           color: Colors.grey,
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Registrar()),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: _recipes.length,
+                        itemBuilder: (context, index) {
+                          final recipe = _recipes[index];
+                          return Card(
+                            margin: const EdgeInsets.symmetric(
+                              vertical: 5,
+                              horizontal: 8,
+                            ),
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: ListTile(
+                              onTap: () => _showRecipeDetails(recipe),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.orange.shade100,
+                                child: const Icon(
+                                  Icons.restaurant,
+                                  color: Colors.orange,
+                                ),
+                              ),
+                              title: Text(
+                                recipe.title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text(
+                                recipe.description.isNotEmpty
+                                    ? recipe.description
+                                    : "Sin descripción",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.blue,
+                                    ),
+                                    onPressed: () => _navigateToEdit(recipe),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () => _confirmDelete(recipe.id!),
+                                  ),
+                                ],
+                              ),
+                            ),
                           );
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 10,
-                          ),
-                        ),
-                        child: const Text(
-                          "Registrar nueva receta",
-                          style: TextStyle(color: Colors.white),
-                        ),
                       ),
-                    ],
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "${_recipes.length} receta${_recipes.length > 1 ? 's' : ''} encontrada${_recipes.length > 1 ? 's' : ''}",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: _recipes.length,
-                          itemBuilder: (context, index) {
-                            final recipe = _recipes[index];
-                            return Card(
-                              margin: const EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 8,
-                              ),
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: ListTile(
-                                onTap: () => _showRecipeDetails(recipe),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 8,
-                                ),
-                                leading: CircleAvatar(
-                                  backgroundColor: Colors.orange.shade100,
-                                  child: const Icon(
-                                    Icons.restaurant,
-                                    color: Colors.orange,
-                                  ),
-                                ),
-                                title: Text(
-                                  recipe.title,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  recipe.description.isNotEmpty
-                                      ? recipe.description
-                                      : "Sin descripción",
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.blue,
-                                      ),
-                                      onPressed: () => _navigateToEdit(recipe),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                      onPressed: () => _confirmDelete(recipe.id!),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

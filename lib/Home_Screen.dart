@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'verReceta.dart';
 import 'Busqueda.dart';
 
-
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -47,7 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 36,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.image_not_supported, color: Colors.white);
+                  return const Icon(
+                    Icons.image_not_supported,
+                    color: Colors.white,
+                  );
                 },
               ),
             ),
@@ -69,22 +71,29 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Cerrar sesión"),
-                  content: const Text("¿Estás seguro de que querés cerrar sesión?"),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text("Cancelar"),
+                builder:
+                    (context) => AlertDialog(
+                      title: const Text("Cerrar sesión"),
+                      content: const Text(
+                        "¿Estás seguro de que querés cerrar sesión?",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text("Cancelar"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/',
+                              (route) => false,
+                            );
+                          },
+                          child: const Text("Cerrar sesión"),
+                        ),
+                      ],
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-                      },
-                      child: const Text("Cerrar sesión"),
-                    ),
-                  ],
-                ),
               );
             },
           ),
@@ -148,13 +157,20 @@ class HomePage extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Icon(Icons.lightbulb_outline, size: 40, color: Colors.orange),
+                const Icon(
+                  Icons.lightbulb_outline,
+                  size: 40,
+                  color: Colors.orange,
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
-                      Text("¡Consejo del día!", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(
+                        "¡Consejo del día!",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       Text("Prueba una receta nueva esta semana 🍰"),
                     ],
                   ),
@@ -175,10 +191,30 @@ class HomePage extends StatelessWidget {
             spacing: 20,
             runSpacing: 20,
             children: [
-              _buildActionCard(context, Icons.add_circle_outline, "Añadir Receta", '/Registrar'),
-              _buildActionCard(context, Icons.edit, "Editar Perfil", '/editar_perfil'),
-              _buildActionCard(context, Icons.notifications_none, "Notificaciones", '/Notificaciones'),
-              _buildActionCard(context, Icons.people_alt_outlined, "Recetas de Otros", '/Recetas_Otros'),
+              _buildActionCard(
+                context,
+                Icons.add_circle_outline,
+                "Añadir Receta",
+                '/Registrar',
+              ),
+              _buildActionCard(
+                context,
+                Icons.edit,
+                "Editar Perfil",
+                '/editar_perfil',
+              ),
+              _buildActionCard(
+                context,
+                Icons.notifications_none,
+                "Notificaciones",
+                '/Notificaciones',
+              ),
+              _buildActionCard(
+                context,
+                Icons.people_alt_outlined,
+                "Recetas de Otros",
+                '/Recetas_Otros',
+              ),
             ],
           ),
         ],
@@ -186,7 +222,12 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildActionCard(BuildContext context, IconData icon, String label, String route) {
+  Widget _buildActionCard(
+    BuildContext context,
+    IconData icon,
+    String label,
+    String route,
+  ) {
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, route),
       child: Container(
@@ -200,7 +241,7 @@ class HomePage extends StatelessWidget {
               color: Colors.black26,
               blurRadius: 6,
               offset: Offset(0, 4),
-            )
+            ),
           ],
         ),
         child: Column(
@@ -214,9 +255,8 @@ class HomePage extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,
-            )
+            ),
           ],
-          
         ),
       ),
     );

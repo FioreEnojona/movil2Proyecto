@@ -1,11 +1,12 @@
 import 'dart:async'; // Añade esta importación
 
 import 'package:flutter/material.dart';
+import 'package:movil2proyecto/recetas_otro.dart';
 import '../db/database_helper.dart';
 import '../models/recetas.dart';
 
 class BusquedaScreen extends StatefulWidget {
-  const BusquedaScreen({Key? key}) : super(key: key);
+  const BusquedaScreen({super.key});
 
   @override
   _BusquedaScreenState createState() => _BusquedaScreenState();
@@ -163,7 +164,15 @@ class _BusquedaScreenState extends State<BusquedaScreen> {
                             Icons.chevron_right,
                             color: Color(0xFFE48826),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => Recetas_otros(recipe: recipe),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
