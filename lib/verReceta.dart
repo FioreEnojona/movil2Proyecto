@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../db/database_helper.dart';
-import '../models/recetas.dart'; // Cambiado a recetas.dart según tu estructura
+import '../models/recetas.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'registrar.dart'; // Import para navegación de regreso a registro
+import 'registrar.dart';
 
 class VerRecetas extends StatefulWidget {
   const VerRecetas({super.key});

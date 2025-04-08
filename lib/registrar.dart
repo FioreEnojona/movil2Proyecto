@@ -5,7 +5,7 @@ import '../models/recetas.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Registrar extends StatefulWidget {
-  final Recipe? recipeToEdit; // Agregamos parámetro para receta a editar
+  final Recipe? recipeToEdit;
 
   const Registrar({super.key, this.recipeToEdit});
 

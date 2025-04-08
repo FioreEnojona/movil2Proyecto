@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/recetas.dart';
-import 'favoritos.dart'; // Importa la lista de favoritos
+import 'favoritos.dart';
 
 class Recetas_otros extends StatefulWidget {
   final Recipe recipe;
@@ -48,16 +48,16 @@ class _Recetas_otrosState extends State<Recetas_otros> {
                   widget.recipe.imagePath != null &&
                           widget.recipe.imagePath!.isNotEmpty
                       ? Image.network(
-                          widget.recipe.imagePath!,
-                          height: 120,
-                          width: 120,
-                          fit: BoxFit.cover,
-                        )
+                        widget.recipe.imagePath!,
+                        height: 120,
+                        width: 120,
+                        fit: BoxFit.cover,
+                      )
                       : const Icon(
-                          Icons.people_alt,
-                          size: 60,
-                          color: Colors.orange,
-                        ),
+                        Icons.people_alt,
+                        size: 60,
+                        color: Colors.orange,
+                      ),
                   const SizedBox(height: 10),
                   Text(
                     widget.recipe.title,
@@ -95,7 +95,8 @@ class _Recetas_otrosState extends State<Recetas_otros> {
                       setState(() {
                         if (anadida) {
                           recetasFavoritas.removeWhere(
-                              (r) => r.title == widget.recipe.title);
+                            (r) => r.title == widget.recipe.title,
+                          );
                         } else {
                           recetasFavoritas.add(widget.recipe);
                         }
@@ -118,9 +119,7 @@ class _Recetas_otrosState extends State<Recetas_otros> {
                       color: Colors.white,
                     ),
                     label: Text(
-                      anadida
-                          ? 'Quitar de favoritos'
-                          : 'Añadir a favoritos',
+                      anadida ? 'Quitar de favoritos' : 'Añadir a favoritos',
                       style: const TextStyle(color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(

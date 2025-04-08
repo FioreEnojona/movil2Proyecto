@@ -17,31 +17,35 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
 
   Future<void> login() async {
-  String email = userController.text;
-  String password = passwordController.text;
-  
-  print("Intentando iniciar sesión con: $email");
+    String email = userController.text;
+    String password = passwordController.text;
 
-  if (email.isEmpty || password.isEmpty) {
-    _showError(context, 'Por favor, ingrese usuario y contraseña.');
-    return;
+    print("Intentando iniciar sesión con: $email");
+
+    if (email.isEmpty || password.isEmpty) {
+      _showError(context, 'Por favor, ingrese usuario y contraseña.');
+      return;
+    }
+
+    User? user = await dbHelper.verifyLogin(email, password);
+    print(
+      "Resultado de verificación: ${user != null ? 'Usuario encontrado' : 'Usuario no encontrado'}",
+    );
+
+    if (user != null) {
+      // Guardar el ID del usuario en SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('userId', user.id!);
+      print("ID de usuario guardado en SharedPreferences: ${user.id}");
+
+      Navigator.pushReplacementNamed(context, '/Home');
+    } else {
+      _showError(
+        context,
+        'Error: Cuenta no registrada o credenciales incorrectas.',
+      );
+    }
   }
-
-  User? user = await dbHelper.verifyLogin(email, password);
-  print("Resultado de verificación: ${user != null ? 'Usuario encontrado' : 'Usuario no encontrado'}");
-
-  if (user != null) {
-    // Guardar el ID del usuario en SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('userId', user.id!); // Asegúrate de que user.id no sea nulo
-    print("ID de usuario guardado en SharedPreferences: ${user.id}");
-    
-    Navigator.pushReplacementNamed(context, '/Home');
-  } else {
-    _showError(context, 'Error: Cuenta no registrada o credenciales incorrectas.');
-  }
-}
-  
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +58,14 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const Icon(Icons.cake, size: 100, color: Color(0xFFE48826)),
               const SizedBox(height: 10),
-              const Text('Inicio de Sesión', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFFE48826))),
+              const Text(
+                'Inicio de Sesión',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFE48826),
+                ),
+              ),
               const SizedBox(height: 20),
               _buildInputField(userController, 'Correo', Icons.person),
               const SizedBox(height: 10),
@@ -62,7 +73,13 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 5, offset: Offset(0, 2))],
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 5,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -72,10 +89,15 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: InputDecoration(
                       labelText: 'Contraseña',
                       border: InputBorder.none,
-                      prefixIcon: Icon(Icons.lock, color: const Color(0xFFE48826)),
+                      prefixIcon: Icon(
+                        Icons.lock,
+                        color: const Color(0xFFE48826),
+                      ),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscureText ? Icons.visibility_off : Icons.visibility,
+                          _obscureText
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                           color: const Color(0xFFE48826),
                         ),
                         onPressed: () {
@@ -92,22 +114,26 @@ class _LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 style: _buttonStyle(),
                 onPressed: () => login(),
-                child: const Text('Iniciar Sesión', style: TextStyle(color: Colors.white, fontSize: 16)),
+                child: const Text(
+                  'Iniciar Sesión',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
               ),
               const SizedBox(height: 10),
               TextButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterPage(),
+                    ),
+                  );
                 },
-                child: const Text('¿No tienes cuenta? Regístrate', style: TextStyle(color: Color(0xFFBB99B7))),
+                child: const Text(
+                  '¿No tienes cuenta? Regístrate',
+                  style: TextStyle(color: Color(0xFFBB99B7)),
+                ),
               ),
-              
-              // Botón para verificar usuarios (solo para depuración)
-              //const SizedBox(height: 20),
-              //OutlinedButton(
-                //onPressed: () => checkUsers(),
-                //child: const Text('Verificar Usuarios Registrados'),
-              //),
             ],
           ),
         ),
@@ -129,7 +155,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController passwordController = TextEditingController();
   final dbHelper = DatabaseHelper();
   bool _obscureText = true;
-  
+
   // Mensajes de error para validaciones
   String? emailError;
   String? passwordError;
@@ -146,31 +172,34 @@ class _RegisterPageState extends State<RegisterPage> {
       passwordError = "La contraseña debe tener al menos 8 caracteres";
       return false;
     }
-    
+
     // Verificar mayúscula
     if (!RegExp(r'[A-Z]').hasMatch(password)) {
-      passwordError = "La contraseña debe contener al menos una letra mayúscula";
+      passwordError =
+          "La contraseña debe contener al menos una letra mayúscula";
       return false;
     }
-    
+
     // Verificar minúscula
     if (!RegExp(r'[a-z]').hasMatch(password)) {
-      passwordError = "La contraseña debe contener al menos una letra minúscula";
+      passwordError =
+          "La contraseña debe contener al menos una letra minúscula";
       return false;
     }
-    
+
     // Verificar número
     if (!RegExp(r'[0-9]').hasMatch(password)) {
       passwordError = "La contraseña debe contener al menos un número";
       return false;
     }
-    
+
     // Verificar carácter especial
     if (!RegExp(r'[!@#\$%\^&\*\(\),.?":{}|<>]').hasMatch(password)) {
-      passwordError = "La contraseña debe contener al menos un carácter especial";
+      passwordError =
+          "La contraseña debe contener al menos un carácter especial";
       return false;
     }
-    
+
     return true;
   }
 
@@ -180,11 +209,11 @@ class _RegisterPageState extends State<RegisterPage> {
         emailError = null;
         passwordError = null;
       });
-      
+
       String name = nameController.text;
       String email = emailController.text;
       String password = passwordController.text;
-      
+
       print("Intentando registrar: Nombre=$name, Email=$email");
 
       if (name.isEmpty || email.isEmpty || password.isEmpty) {
@@ -203,9 +232,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
       // Validar contraseña
       if (!isStrongPassword(password)) {
-        setState(() {
-          // El mensaje de error ya está configurado en isStrongPassword
-        });
+        setState(() {});
         return;
       }
 
@@ -213,7 +240,7 @@ class _RegisterPageState extends State<RegisterPage> {
       print("Verificando si el email ya existe...");
       bool exists = await dbHelper.emailExists(email);
       print("¿Email existe?: $exists");
-      
+
       if (exists) {
         print("Error: Email ya registrado");
         _showError(context, 'Este correo electrónico ya está registrado.');
@@ -221,34 +248,30 @@ class _RegisterPageState extends State<RegisterPage> {
       }
 
       // Crear usuario
-      User newUser = User(
-        name: name,
-        email: email,
-        password: password,
-      );
-      
+      User newUser = User(name: name, email: email, password: password);
+
       print("Insertando usuario en la base de datos...");
       int result = await dbHelper.insertUser(newUser);
       print("Resultado de inserción: $result");
-      
+
       if (result > 0) {
         print("Registro exitoso - Mostrando diálogo");
-        
-        // Modificación: Primero mostrar el diálogo y luego navegar
+
         await showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Éxito'),
-            content: Text('Registro exitoso. Ahora puedes iniciar sesión.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context), 
-                child: const Text('OK')
+          builder:
+              (context) => AlertDialog(
+                title: const Text('Éxito'),
+                content: Text('Registro exitoso. Ahora puedes iniciar sesión.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('OK'),
+                  ),
+                ],
               ),
-            ],
-          ),
         );
-        
+
         // Después de cerrar el diálogo, navegar hacia atrás
         print("Diálogo cerrado, volviendo a login");
         Navigator.pop(context); // Volver a login
@@ -272,8 +295,19 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.account_circle, size: 100, color: Color(0xFFE48826)),
-                const Text('Registro de Usuario', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFFE48826))),
+                const Icon(
+                  Icons.account_circle,
+                  size: 100,
+                  color: Color(0xFFE48826),
+                ),
+                const Text(
+                  'Registro de Usuario',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFE48826),
+                  ),
+                ),
                 const SizedBox(height: 10),
                 _buildInputField(nameController, 'Nombre', Icons.person),
                 const SizedBox(height: 10),
@@ -281,7 +315,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 5, offset: Offset(0, 2))],
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 5,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -291,7 +331,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       decoration: InputDecoration(
                         labelText: 'Correo Electrónico',
                         border: InputBorder.none,
-                        prefixIcon: Icon(Icons.email, color: const Color(0xFFE48826)),
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: const Color(0xFFE48826),
+                        ),
                         errorText: emailError,
                       ),
                     ),
@@ -302,7 +345,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 5, offset: Offset(0, 2))],
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 5,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -312,10 +361,15 @@ class _RegisterPageState extends State<RegisterPage> {
                       decoration: InputDecoration(
                         labelText: 'Contraseña',
                         border: InputBorder.none,
-                        prefixIcon: Icon(Icons.lock, color: const Color(0xFFE48826)),
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: const Color(0xFFE48826),
+                        ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscureText ? Icons.visibility_off : Icons.visibility,
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
                             color: const Color(0xFFE48826),
                           ),
                           onPressed: () {
@@ -341,14 +395,20 @@ class _RegisterPageState extends State<RegisterPage> {
                 ElevatedButton(
                   style: _buttonStyle(),
                   onPressed: () => register(),
-                  child: const Text('Registrarse', style: TextStyle(color: Colors.white, fontSize: 16)),
+                  child: const Text(
+                    'Registrarse',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: const Text('¿Ya tienes una cuenta? Inicia sesión', style: TextStyle(color: Color(0xFFBB99B7))),
+                  child: const Text(
+                    '¿Ya tienes una cuenta? Inicia sesión',
+                    style: TextStyle(color: Color(0xFFBB99B7)),
+                  ),
                 ),
               ],
             ),
@@ -359,12 +419,19 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 }
 
-Widget _buildInputField(TextEditingController controller, String label, IconData icon, {bool obscureText = false}) {
+Widget _buildInputField(
+  TextEditingController controller,
+  String label,
+  IconData icon, {
+  bool obscureText = false,
+}) {
   return Container(
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
-      boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 5, offset: Offset(0, 2))],
+      boxShadow: const [
+        BoxShadow(color: Colors.black26, blurRadius: 5, offset: Offset(0, 2)),
+      ],
     ),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -384,39 +451,51 @@ Widget _buildInputField(TextEditingController controller, String label, IconData
 void _showError(BuildContext context, String message) {
   showDialog(
     context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Error'),
-      content: Text(message),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
-      ],
-    ),
+    builder:
+        (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
   );
 }
 
 void _showSuccess(BuildContext context, String message) {
   showDialog(
     context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Éxito'),
-      content: Text(message),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
-      ],
-    ),
+    builder:
+        (context) => AlertDialog(
+          title: const Text('Éxito'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
   );
 }
 
 void _showInfo(BuildContext context, String message) {
   showDialog(
     context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Información'),
-      content: Text(message),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
-      ],
-    ),
+    builder:
+        (context) => AlertDialog(
+          title: const Text('Información'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
   );
 }
 
