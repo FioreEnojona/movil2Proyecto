@@ -4,7 +4,7 @@ import 'package:movil2proyecto/Home_Screen.dart';
 import 'package:movil2proyecto/editar_perfil.dart';
 import 'package:movil2proyecto/verReceta.dart';
 import 'package:movil2proyecto/registrar.dart';
-import 'package:movil2proyecto/notificaciones.dart';
+import 'package:movil2proyecto/favoritos.dart';
 import 'package:movil2proyecto/Busqueda.dart'; 
 
 import 'package:movil2proyecto/db/database_helper.dart'; // Importar el DatabaseHelper
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         '/editar_perfil': (context) => const EditarPerfilScreen(),
         '/Ver_Recetas': (context) => const VerRecetas(),
         '/Registrar': (context) => const Registrar(),
-        '/Notificaciones': (context) => const Notificaciones(),
+        '/favoritos': (context) => const AnadirFavoritos (),
         '/Busqueda': (context) => const BusquedaScreen(), 
        
       },

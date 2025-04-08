@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/recetas.dart';
+import 'favoritos.dart'; // Importa la lista de favoritos
 
 class Recetas_otros extends StatefulWidget {
   final Recipe recipe;
@@ -11,7 +12,14 @@ class Recetas_otros extends StatefulWidget {
 }
 
 class _Recetas_otrosState extends State<Recetas_otros> {
-  bool anadida = false;
+  late bool anadida;
+
+  @override
+  void initState() {
+    super.initState();
+    // Verifica si ya está en favoritos
+    anadida = recetasFavoritas.any((r) => r.title == widget.recipe.title);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +48,16 @@ class _Recetas_otrosState extends State<Recetas_otros> {
                   widget.recipe.imagePath != null &&
                           widget.recipe.imagePath!.isNotEmpty
                       ? Image.network(
-                        widget.recipe.imagePath!,
-                        height: 120,
-                        width: 120,
-                        fit: BoxFit.cover,
-                      )
+                          widget.recipe.imagePath!,
+                          height: 120,
+                          width: 120,
+                          fit: BoxFit.cover,
+                        )
                       : const Icon(
-                        Icons.people_alt,
-                        size: 60,
-                        color: Colors.orange,
-                      ),
+                          Icons.people_alt,
+                          size: 60,
+                          color: Colors.orange,
+                        ),
                   const SizedBox(height: 10),
                   Text(
                     widget.recipe.title,
@@ -85,14 +93,21 @@ class _Recetas_otrosState extends State<Recetas_otros> {
                   ElevatedButton.icon(
                     onPressed: () {
                       setState(() {
+                        if (anadida) {
+                          recetasFavoritas.removeWhere(
+                              (r) => r.title == widget.recipe.title);
+                        } else {
+                          recetasFavoritas.add(widget.recipe);
+                        }
                         anadida = !anadida;
                       });
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
                             anadida
-                                ? 'Receta añadida a tus recetas'
-                                : 'Receta eliminada de tus recetas',
+                                ? 'Receta añadida a favoritos'
+                                : 'Receta eliminada de favoritos',
                           ),
                           backgroundColor: Colors.orange,
                         ),
@@ -104,8 +119,8 @@ class _Recetas_otrosState extends State<Recetas_otros> {
                     ),
                     label: Text(
                       anadida
-                          ? 'Quitar de mis recetas'
-                          : 'Añadir a mis recetas',
+                          ? 'Quitar de favoritos'
+                          : 'Añadir a favoritos',
                       style: const TextStyle(color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(

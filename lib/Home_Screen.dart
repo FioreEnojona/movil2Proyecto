@@ -71,29 +71,28 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               showDialog(
                 context: context,
-                builder:
-                    (context) => AlertDialog(
-                      title: const Text("Cerrar sesión"),
-                      content: const Text(
-                        "¿Estás seguro de que querés cerrar sesión?",
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text("Cancelar"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              '/',
-                              (route) => false,
-                            );
-                          },
-                          child: const Text("Cerrar sesión"),
-                        ),
-                      ],
+                builder: (context) => AlertDialog(
+                  title: const Text("Cerrar sesión"),
+                  content: const Text(
+                    "¿Estás seguro de que querés cerrar sesión?",
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Cancelar"),
                     ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/',
+                          (route) => false,
+                        );
+                      },
+                      child: const Text("Cerrar sesión"),
+                    ),
+                  ],
+                ),
               );
             },
           ),
@@ -190,6 +189,7 @@ class HomePage extends StatelessWidget {
           Wrap(
             spacing: 20,
             runSpacing: 20,
+            alignment: WrapAlignment.center,
             children: [
               _buildActionCard(
                 context,
@@ -205,15 +205,9 @@ class HomePage extends StatelessWidget {
               ),
               _buildActionCard(
                 context,
-                Icons.notifications_none,
-                "Notificaciones",
-                '/Notificaciones',
-              ),
-              _buildActionCard(
-                context,
-                Icons.people_alt_outlined,
-                "Recetas de Otros",
-                '/Recetas_Otros',
+                Icons.favorite,
+                "Recetas favoritas",
+                '/favoritos',
               ),
             ],
           ),
