@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart';
 import '../models/user.dart';
@@ -20,8 +22,11 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     try {
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
+      // Usar sqflite_ffi solo en plataformas de escritorio
+      if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+        sqfliteFfiInit();
+        databaseFactory = databaseFactoryFfi;
+      }
 
       String path = join(await getDatabasesPath(), 'app_database.db');
       print("Ruta de la base de datos: $path");
@@ -42,15 +47,12 @@ class DatabaseHelper {
 
   Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
-      // Verificamos si la columna user_id ya existe
       var columns = await db.rawQuery("PRAGMA table_info(recipes)");
       bool hasUserId = columns.any((col) => col['name'] == 'user_id');
 
       if (!hasUserId) {
         await db.execute("ALTER TABLE recipes ADD COLUMN user_id INTEGER");
         print("Columna 'user_id' añadida a la tabla recipes.");
-
-        // Opcional: añadir restricciones (no se puede hacer con ALTER TABLE fácilmente en SQLite)
       }
     }
   }
@@ -98,7 +100,8 @@ class DatabaseHelper {
     }
   }
 
-  // CRUD USUARIOS
+  // ----------------- CRUD USUARIOS ----------------- //
+
   Future<int> insertUser(User user) async {
     try {
       Database db = await database;
@@ -208,7 +211,8 @@ class DatabaseHelper {
     }
   }
 
-  // CRUD RECETAS
+  // ----------------- CRUD RECETAS ----------------- //
+
   Future<int> insertRecipe(Recipe recipe) async {
     try {
       Database db = await database;
@@ -300,11 +304,12 @@ class DatabaseHelper {
     }
   }
 
+  // ----------------- BÚSQUEDAS ----------------- //
+
   String getCurrentDateTime() {
     return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
   }
 
-  // Buscar recetas por título (nombre)
   Future<List<Recipe>> searchRecipesByTitle(String searchTerm) async {
     try {
       Database db = await database;
@@ -321,7 +326,6 @@ class DatabaseHelper {
     }
   }
 
-  // Buscar recetas por ingrediente
   Future<List<Recipe>> searchRecipesByIngredient(String searchTerm) async {
     try {
       Database db = await database;
@@ -338,7 +342,6 @@ class DatabaseHelper {
     }
   }
 
-  // Método combinado que busca en título e ingredientes
   Future<List<Recipe>> searchRecipes(String searchTerm) async {
     try {
       Database db = await database;
